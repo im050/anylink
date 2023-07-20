@@ -86,7 +86,7 @@ func CheckUser(name, pwd, group string) error {
 	// 其它认证方式, 支持自定义
 	_, ok := authRegistry[authType]
 	if !ok {
-		return fmt.Errorf("%s %s", "未知的认证方式: ", authType)
+		return errs.Errorf("%s %s", "未知的认证方式: ", authType)
 	}
 	auth := makeInstance(authType).(IUserAuth)
 	return auth.checkUser(name, pwd, groupData)
@@ -121,7 +121,7 @@ func checkLocalUser(name, pwd, group string) error {
 		pinCode = pwd[:pl-6]
 		otp := pwd[pl-6:]
 		if !checkOtp(name, otp, v.OtpSecret) {
-			return fmt.Errorf("%s %s", name, "动态码错误")
+			return errs.Errorf("%s %s", name, "动态码错误")
 		}
 	}
 

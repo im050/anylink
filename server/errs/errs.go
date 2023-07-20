@@ -34,6 +34,6 @@ func (h *Error) Output(message string) *Error {
 	return h
 }
 
-func Errorf(tpl string, args ...string) *Error {
-	return New(fmt.Sprintf(tpl, args))
+func Errorf(tpl string, args ...interface{}) *Error {
+	return New(fmt.Sprintf(tpl, args...))
 }
