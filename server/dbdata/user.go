@@ -1,8 +1,8 @@
 package dbdata
 
 import (
-	"errors"
 	"fmt"
+	"github.com/bjdgyc/anylink/errs"
 	"sync"
 	"time"
 
@@ -29,7 +29,7 @@ import (
 func SetUser(v *User) error {
 	var err error
 	if v.Username == "" || len(v.Groups) == 0 {
-		return errors.New("用户名或组错误")
+		return errs.New("用户名或组错误")
 	}
 
 	planPass := v.PinCode
@@ -52,7 +52,7 @@ func SetUser(v *User) error {
 		}
 	}
 	if len(ng) == 0 {
-		return errors.New("用户名或组错误")
+		return errs.New("用户名或组错误")
 	}
 	v.Groups = ng
 
@@ -72,7 +72,7 @@ func CheckUser(name, pwd, group string) error {
 	groupData := &Group{}
 	err := One("Name", group, groupData)
 	if err != nil || groupData.Status != 1 {
-		return fmt.Errorf("%s - %s", name, "用户组错误")
+		return errs.New(fmt.Sprintf("%s - %s", name, "用户组错误"))
 	}
 	// 初始化Auth
 	if len(groupData.Auth) == 0 {
@@ -99,21 +99,21 @@ func checkLocalUser(name, pwd, group string) error {
 
 	pl := len(pwd)
 	if name == "" || pl < 6 {
-		return fmt.Errorf("%s %s", name, "密码错误")
+		return errs.New(fmt.Sprintf("%s %s", name, "密码错误"))
 	}
 	v := &User{}
 	err := One("Username", name, v)
 	if err != nil || v.Status != 1 {
 		switch v.Status {
 		case 0:
-			return fmt.Errorf("%s %s", name, "用户不存在或用户已停用")
+			return errs.Errorf("%s %s", name, "用户不存在或用户已停用")
 		case 2:
-			return fmt.Errorf("%s %s", name, "用户已过期")
+			return errs.Errorf("%s %s", name, "用户已过期")
 		}
 	}
 	// 判断用户组信息
 	if !utils.InArrStr(v.Groups, group) {
-		return fmt.Errorf("%s %s", name, "用户组错误")
+		return errs.Errorf("%s %s", name, "用户组错误")
 	}
 	// 判断otp信息
 	pinCode := pwd
@@ -127,7 +127,7 @@ func checkLocalUser(name, pwd, group string) error {
 
 	// 判断用户密码
 	if pinCode != v.PinCode {
-		return fmt.Errorf("%s %s", name, "密码错误")
+		return errs.Errorf("%s %s", name, "密码错误")
 	}
 
 	return nil

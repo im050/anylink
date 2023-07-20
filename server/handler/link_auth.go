@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/xml"
 	"fmt"
+	"github.com/bjdgyc/anylink/errs"
 	"io"
 	"net"
 	"net/http"
@@ -88,8 +89,13 @@ func LinkAuth(w http.ResponseWriter, r *http.Request) {
 		ua.Status = dbdata.UserAuthFail
 		dbdata.UserActLogIns.Add(ua, userAgent)
 
+		errMessage := "用户名或密码错误"
+		if e, ok := err.(*errs.Error); ok {
+			errMessage = e.Message
+		}
+
 		w.WriteHeader(http.StatusOK)
-		data := RequestData{Group: cr.GroupSelect, Groups: dbdata.GetGroupNamesNormal(), Error: "用户名或密码错误"}
+		data := RequestData{Group: cr.GroupSelect, Groups: dbdata.GetGroupNamesNormal(), Error: errMessage}
 		if base.Cfg.DisplayError {
 			data.Error = err.Error()
 		}
