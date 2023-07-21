@@ -151,6 +151,16 @@ func GenToken() string {
 	return fmt.Sprintf("%x", bToken)
 }
 
+func GetUserSession(name string) (list []*Session) {
+	list = make([]*Session, 0)
+	for _, v := range sessions {
+		if v.Username == name {
+			list = append(list, v)
+		}
+	}
+	return
+}
+
 func NewSession(token string) *Session {
 	if token == "" {
 		btoken := make([]byte, 32)

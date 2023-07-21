@@ -109,6 +109,13 @@ func LinkAuth(w http.ResponseWriter, r *http.Request) {
 	//	tplRequest(tpl_request, w, data)
 	//	return
 	// }
+	// 检查已经登录的设备数
+	sessList := sessdata.GetUserSession(cr.Auth.Username)
+	//TODO: 动态客户端数量,目前仅允许一个，直接踢
+	if len(sessList) >= 1 {
+		oldSess := sessList[0]
+		sessdata.CloseCSess(oldSess.Token)
+	}
 
 	// 创建新的session信息
 	sess := sessdata.NewSession("")
