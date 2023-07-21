@@ -111,9 +111,6 @@ func checkLocalUser(name, pwd, group string) error {
 	// remote get 通过远端获取
 	if err == ErrNotFound {
 		v, err = getUserFromRemote(name)
-		if v.Id > 0 {
-			err = Add(v) // 同步到本地数据库
-		}
 	}
 	if err != nil || v.Status != 1 {
 		switch v.Status {
