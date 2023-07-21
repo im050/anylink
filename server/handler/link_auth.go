@@ -116,7 +116,7 @@ func LinkAuth(w http.ResponseWriter, r *http.Request) {
 	if len(sessList) >= 1 {
 		oldSess := sessList[0]
 		fmt.Println("close old", oldSess.Token)
-		sessdata.DelSessByStoken(oldSess.Token)
+		sessdata.CloseSess(oldSess.Token, dbdata.UserLogoutAdmin)
 	}
 
 	// 创建新的session信息
