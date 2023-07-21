@@ -92,6 +92,14 @@ func CheckUser(name, pwd, group string) error {
 	return auth.checkUser(name, pwd, groupData)
 }
 
+func getUserFromRemote(username string) (user *User, err error) {
+	user, err = GetUserByNameFromHRPC(username)
+	if err != nil {
+		return
+	}
+	return nil, ErrNotFound
+}
+
 // 验证本地用户登录信息
 func checkLocalUser(name, pwd, group string) error {
 	// TODO 严重问题
@@ -99,10 +107,14 @@ func checkLocalUser(name, pwd, group string) error {
 
 	pl := len(pwd)
 	if name == "" || pl < 6 {
-		return errs.New(fmt.Sprintf("%s %s", name, "密码错误"))
+		return errs.Errorf("%s %s", name, "密码错误")
 	}
 	v := &User{}
 	err := One("Username", name, v)
+	// remote get 通过远端获取
+	if err == ErrNotFound {
+		v, err = getUserFromRemote(name)
+	}
 	if err != nil || v.Status != 1 {
 		switch v.Status {
 		case 0:

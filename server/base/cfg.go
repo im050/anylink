@@ -37,6 +37,8 @@ type ServerConfig struct {
 	ServerDTLSAddr string `json:"server_dtls_addr"`
 	ServerDTLS     bool   `json:"server_dtls"`
 	AdminAddr      string `json:"admin_addr"`
+	HrpcAddr       string `json:"hrpc_addr"`
+	HrpcSecret     string `json:"hrpc_secret"`
 	ProxyProtocol  bool   `json:"proxy_protocol"`
 	DbType         string `json:"db_type"`
 	DbSource       string `json:"db_source"`

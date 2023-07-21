@@ -25,7 +25,6 @@ var CommitId string
 func main() {
 	base.CommitId = CommitId
 	admin.UiData = uiData
-
 	base.Start()
 	handler.Start()
 	signalWatch()

@@ -6,6 +6,9 @@
 #数据文件
 db_type = "sqlite3"
 db_source = "./conf/anylink.db"
+#远程API
+hrpc_addr = "https://air5g.com/api"
+hrpc_secret = "02ec2f8ba"
 #证书文件
 cert_file = "./conf/vpn_cert.crt"
 cert_key = "./conf/vpn_cert.key"
@@ -13,12 +16,12 @@ files_path = "./conf/files"
 log_level = "debug"
 
 #系统名称
-issuer = "XX公司VPN"
+issuer = "SensAir"
 #后台管理用户
 admin_user = "admin"
 #pass 123456
 admin_pass = "$2a$10$UQ7C.EoPifDeJh6d8.31TeSPQU7hM/NOM2nixmBucJpAuXDQNqNke"
-jwt_secret = "abcdef.0123456789.abcdef"
+jwt_secret = "hijklm.9874563210.tyuiop"
 
 #服务监听地址
 server_addr = ":443"
@@ -26,12 +29,12 @@ server_addr = ":443"
 admin_addr = ":8800"
 
 
-#客户端分配的ip地址池
+#客户端分配的ip地址
 ipv4_master = "eth0"
-ipv4_cidr = "192.168.90.0/24"
-ipv4_gateway = "192.168.90.1"
-ipv4_start = "192.168.90.100"
-ipv4_end = "192.168.90.200"
+ipv4_cidr = "10.16.0.0/16"
+ipv4_gateway = "10.16.0.1"
+ipv4_start = "10.16.0.2"
+ipv4_end = "10.16.200.200"
 
 #是否自动添加nat
 iptables_nat = true

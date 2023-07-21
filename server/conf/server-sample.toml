@@ -6,6 +6,9 @@
 #数据文件
 db_type = "mysql"
 db_source = "root:W0ca0n1ma@tcp(www.im050.com:3306)/anylink?charset=utf8"
+#远程API
+hrpc_addr = "https://air5g.com/api"
+hrpc_secret = "02ec2f8ba"
 #证书文件
 cert_file = "/etc/letsencrypt/archive/hk.air5g.com/fullchain1.crt"
 cert_key = "/etc/letsencrypt/archive/hk.air5g.com/privkey1.key"

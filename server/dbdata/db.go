@@ -1,6 +1,7 @@
 package dbdata
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/bjdgyc/anylink/base"
@@ -132,8 +133,8 @@ func addInitData() error {
 	// SettingOther
 	other := &SettingOther{
 		LinkAddr:    "vpn.xx.com",
-		Banner:      "您已接入公司网络，请按照公司规定使用。\n请勿进行非工作下载及视频行为！",
-		Homeindex:   "AnyLink 是一个企业级远程办公 sslvpn 的软件，可以支持多人同时在线使用。",
+		Banner:      "感谢使用 SensAir。\n专为远程办公而生！",
+		Homeindex:   "Welcome to join SensAir",
 		AccountMail: accountMail,
 	}
 	err = SettingSessAdd(sess, other)
@@ -154,18 +155,38 @@ func addInitData() error {
 	}
 
 	g1 := Group{
-		Name:         "ops",
-		AllowLan:     true,
-		ClientDns:    []ValData{{Val: "114.114.114.114"}},
-		RouteInclude: []ValData{{Val: All}},
-		Status:       1,
+		Name:             "规则代理",
+		AllowLan:         true,
+		ClientDns:        []ValData{{Val: "8.8.8.8"}},
+		RouteInclude:     defaultRouteInclude(),
+		DsIncludeDomains: "google.com,youtube.com,github.com",
+		Status:           1,
 	}
 	err = SetGroup(&g1)
 	if err != nil {
 		return err
 	}
 
+	g2 := Group{
+		Name:         "全局代理",
+		AllowLan:     true,
+		ClientDns:    []ValData{{Val: "8.8.8.8"}},
+		RouteInclude: []ValData{{Val: All}},
+		Status:       1,
+	}
+	err = SetGroup(&g2)
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func defaultRouteInclude() []ValData {
+	include := `[{"val":"8.0.0.0/8","ip_mask":"8.0.0.0/255.0.0.0","note":""},{"val":"162.0.0.0/8","ip_mask":"162.0.0.0/255.0.0.0","note":""},{"val":"149.154.164.0/22","ip_mask":"149.154.164.0/255.255.252.0","note":""},{"val":"149.154.160.0/20","ip_mask":"149.154.160.0/255.255.240.0","note":""},{"val":"91.108.56.0/22","ip_mask":"91.108.56.0/255.255.252.0","note":""},{"val":"157.240.0.0/16","ip_mask":"157.240.0.0/255.255.0.0","note":""},{"val":"18.194.0.0/15","ip_mask":"18.194.0.0/255.254.0.0","note":""},{"val":"54.80.0.0/14","ip_mask":"54.80.0.0/255.252.0.0","note":""},{"val":"35.156.0.0/14","ip_mask":"35.156.0.0/255.252.0.0","note":""},{"val":"34.224.0.0/12","ip_mask":"34.224.0.0/255.240.0.0","note":""},{"val":"52.58.0.0/15","ip_mask":"52.58.0.0/255.254.0.0","note":""},{"val":"3.208.0.0/12","ip_mask":"3.208.0.0/255.240.0.0","note":""},{"val":"169.60.64.0/18","ip_mask":"169.60.64.0/255.255.192.0","note":""},{"val":"54.156.0.0/14","ip_mask":"54.156.0.0/255.252.0.0","note":""},{"val":"64.223.160.0/19","ip_mask":"64.223.160.0/255.255.224.0","note":""},{"val":"125.209.208.0/20","ip_mask":"125.209.208.0/255.255.240.0","note":""},{"val":"52.81.0.0/16","ip_mask":"52.81.0.0/255.255.0.0","note":""},{"val":"192.168.90.1/32","ip_mask":"192.168.90.1/255.255.255.255","note":""},{"val":"192.168.90.0/24","ip_mask":"192.168.90.0/255.255.255.0","note":""},{"val":"142.250.0.0/16","ip_mask":"142.250.0.0/255.255.0.0","note":""},{"val":"124.70.129.64/32","ip_mask":"124.70.129.64/255.255.255.255","note":""},{"val":"66.254.0.0/16","ip_mask":"66.254.0.0/255.255.0.0","note":""}]`
+	list := make([]ValData, 0)
+	_ = json.Unmarshal([]byte(include), &list)
+	return list
 }
 
 func CheckErrNotFound(err error) bool {
