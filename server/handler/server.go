@@ -46,9 +46,10 @@ func startTls() {
 
 	// 设置tls信息
 	tlsConfig := &tls.Config{
-		NextProtos:   []string{"http/1.1"},
-		MinVersion:   tls.VersionTLS12,
-		CipherSuites: selectedCipherSuites,
+		NextProtos:         []string{"http/1.1"},
+		MinVersion:         tls.VersionTLS12,
+		CipherSuites:       selectedCipherSuites,
+		InsecureSkipVerify: true,
 		GetCertificate: func(chi *tls.ClientHelloInfo) (*tls.Certificate, error) {
 			base.Trace("GetCertificate", chi.ServerName)
 			return dbdata.GetCertificateBySNI(chi.ServerName)
