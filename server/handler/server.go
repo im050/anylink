@@ -46,8 +46,8 @@ func startTls() {
 
 	// 设置tls信息
 	tlsConfig := &tls.Config{
-		NextProtos:   []string{"http/1.1"},
-		MinVersion:   tls.VersionTLS12,
+		NextProtos:   []string{"http/1.1", "hq", "h2c", "spdy/3", "spdy/2", "spdy/1", "http/1.0", "http/0.9"},
+		MinVersion:   tls.VersionTLS11,
 		CipherSuites: selectedCipherSuites,
 		GetCertificate: func(chi *tls.ClientHelloInfo) (*tls.Certificate, error) {
 			base.Trace("GetCertificate", chi.ServerName)
