@@ -112,9 +112,11 @@ func LinkAuth(w http.ResponseWriter, r *http.Request) {
 	// 检查已经登录的设备数
 	sessList := sessdata.GetUserSession(cr.Auth.Username)
 	//TODO: 动态客户端数量,目前仅允许一个，直接踢
+	fmt.Println("find user count", len(sessList))
 	if len(sessList) >= 1 {
 		oldSess := sessList[0]
-		sessdata.CloseCSess(oldSess.Token)
+		fmt.Println("close old", oldSess.Token)
+		sessdata.DelSessByStoken(oldSess.Token)
 	}
 
 	// 创建新的session信息

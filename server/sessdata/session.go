@@ -154,6 +154,7 @@ func GenToken() string {
 func GetUserSession(name string) (list []*Session) {
 	list = make([]*Session, 0)
 	for _, v := range sessions {
+		fmt.Println("find user", v.Username, name)
 		if v.Username == name {
 			list = append(list, v)
 		}
