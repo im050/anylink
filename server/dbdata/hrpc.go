@@ -18,9 +18,6 @@ const (
 	GetUserPath = "/external/user"
 )
 
-var baseApi = base.Cfg.HrpcAddr
-var baseSecret = base.Cfg.HrpcSecret
-
 type Params map[string]string
 
 type Response struct {
@@ -31,11 +28,6 @@ type Response struct {
 
 var client = &http.Client{
 	Timeout: 10 * time.Second,
-}
-
-func Init(api string, secret string) {
-	baseApi = api
-	baseSecret = secret
 }
 
 func NewResponseWrapper(data interface{}) *Response {
@@ -50,7 +42,7 @@ func GetUserByNameFromHRPC(username string) (user *User, err error) {
 	// 创建结构体
 	user = new(User)
 
-	if baseApi == "" {
+	if base.Cfg.HrpcAddr == "" {
 		log.Println("不存在远程调用API")
 		return
 	}
@@ -89,7 +81,7 @@ func get(uri string, result interface{}) (err error) {
 }
 
 func g(path string, params Params) string {
-	return baseApi + path + buildQueryString(path, params)
+	return base.Cfg.HrpcAddr + path + buildQueryString(path, params)
 }
 
 func buildQueryString(path string, params Params) (queryString string) {
@@ -110,5 +102,5 @@ func buildQueryString(path string, params Params) (queryString string) {
 }
 
 func sign(path string, timestamp int64) string {
-	return caches.Md5(fmt.Sprintf("%s%d%s", path, timestamp, baseSecret))
+	return caches.Md5(fmt.Sprintf("%s%d%s", path, timestamp, base.Cfg.HrpcSecret))
 }

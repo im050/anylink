@@ -2,11 +2,13 @@ package dbdata
 
 import (
 	"fmt"
+	"github.com/bjdgyc/anylink/base"
 	"testing"
 )
 
 func Test_GetUserByName(t *testing.T) {
-	Init("http://localhost:6789", "02ec2f8ba")
+	base.Cfg.HrpcAddr = "http://localhost:6789"
+	base.Cfg.HrpcSecret = "02ec2f8ba"
 	user, err := GetUserByNameFromHRPC("service@im050.com")
 	if err != nil {
 		fmt.Println(err)
