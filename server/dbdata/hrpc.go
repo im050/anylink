@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/bjdgyc/anylink/base"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -28,7 +29,7 @@ type Response struct {
 	Data    interface{}
 }
 
-var client = http.Client{
+var client = &http.Client{
 	Timeout: 10 * time.Second,
 }
 
@@ -46,12 +47,13 @@ func NewResponseWrapper(data interface{}) *Response {
 }
 
 func GetUserByNameFromHRPC(username string) (user *User, err error) {
-	if baseApi == "" {
-		return
-	}
-
 	// 创建结构体
 	user = new(User)
+
+	if baseApi == "" {
+		log.Println("不存在远程调用API")
+		return
+	}
 
 	// 获取数据
 	err = get(g(GetUserPath, Params{"username": username}), user)

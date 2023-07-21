@@ -94,10 +94,7 @@ func CheckUser(name, pwd, group string) error {
 
 func getUserFromRemote(username string) (user *User, err error) {
 	user, err = GetUserByNameFromHRPC(username)
-	if err != nil {
-		return
-	}
-	return nil, ErrNotFound
+	return
 }
 
 // 验证本地用户登录信息
