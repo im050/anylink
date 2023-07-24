@@ -366,7 +366,6 @@ func (cs *ConnSession) ratePeriod() {
 				Username: cs.Username,
 				Used:     total,
 			})
-			fmt.Println(total)
 			if err != nil {
 				return
 			}
