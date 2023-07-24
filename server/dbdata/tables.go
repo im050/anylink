@@ -43,7 +43,7 @@ type User struct {
 type UserMeta struct {
 	Id                  int       `json:"id" xorm:"not null pk autoincr INT(11)"`
 	UserId              int       `json:"user_id" xorm:"unique INT(11)"`
-	Balance             string    `json:"balance" xorm:"DECIMAL(10,2)"`
+	Balance             string    `json:"balance" xorm:"VARCHAR(64)"`
 	Server              string    `json:"server" xorm:"comment('专属服务器') VARCHAR(255)"`
 	DeviceCount         int       `json:"device_count" xorm:"comment('最大设备数') INT(11)"`
 	InvitationCode      string    `json:"invitation_code" xorm:"comment('邀请码') unique VARCHAR(36)"`

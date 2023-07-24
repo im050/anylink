@@ -7,11 +7,11 @@
 db_type = "sqlite3"
 db_source = "./conf/anylink.db"
 #远程API
-hrpc_addr = "https://air5g.com"
+hrpc_addr = "http://192.168.2.54:6789"
 hrpc_secret = "02ec2f8ba"
 #证书文件
-cert_file = "./conf/vpn_cert.crt"
-cert_key = "./conf/vpn_cert.key"
+cert_file = "./conf/vpn_cert2.crt"
+cert_key = "./conf/vpn_cert2.key"
 files_path = "./conf/files"
 log_level = "debug"
 
@@ -42,3 +42,5 @@ iptables_nat = true
 
 #客户端显示详细错误信息(线上环境慎开启)
 display_error = false
+
+

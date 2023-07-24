@@ -217,7 +217,7 @@ var auth_request = `<?xml version="1.0" encoding="UTF-8"?>
         <message>请输入你的用户名和密码</message>
         <banner></banner>
         {{if .Error}}
-        <error id="88" param1="{{.Error}}" param2="">登陆失败:  %s</error>
+        <error id="88" param1="{{.Error}}" param2="">登录失败:  %s</error>
         {{end}}
         <form>
             <input type="text" name="username" label="Username:"></input>
