@@ -360,7 +360,7 @@ func (cs *ConnSession) ratePeriod() {
 		cs.BandwidthDownAll.Add(uint64(rtDown))
 
 		// 同步流量使用情况到中心节点
-		total := int64(cs.BandwidthDownAll.Load() + cs.BandwidthUpAll.Load())
+		total := int64(rtUp + rtDown)
 		go func() {
 			err := dbdata.BandwidthSync(&dbdata.BandwidthSyncRequest{
 				Username: cs.Username,
