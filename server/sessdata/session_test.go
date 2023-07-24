@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestUint64ToInt64(t *testing.T) {
+	var a uint32 = 372189
+	var b uint32 = 232333
+	fmt.Println(int64(a + b))
+}
+
 func TestNewSession(t *testing.T) {
 	ast := assert.New(t)
 	sessions = make(map[string]*Session)

@@ -36,7 +36,7 @@ type Response struct {
 }
 
 var client = &http.Client{
-	Timeout: 10 * time.Second,
+	Timeout: 3 * time.Second,
 }
 
 func NewResponseWrapper(data interface{}) *Response {
