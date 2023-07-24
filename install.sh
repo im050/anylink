@@ -38,6 +38,12 @@ else
   cp -r node-v16.20.1-linux-x64.tar.gz/bin /usr/bin
 fi
 
+certbot certonly -d hk.cgtnew.com -n -m hkcgt@gmail.com --preferred-challenges http --standalone
+
+npm install -g yarn
+
+./build.sh
+
 if command -v certbot >/dev/null 2>&1 ; then
   echo "certbot is installed"
 else
@@ -45,11 +51,6 @@ else
   yum install certbot -y
 fi
 
-certbot certonly -d hk.cgtnew.com -n -m hkcgt@gmail.com --preferred-challenges http --standalone
+read -p "Enter domain for apply SSL: " domain
 
-npm install -g yarn
-
-git clone git@github.com:im050/anylink.git
-cd anylink
-
-./build.sh
+certbot certonly -d ${domain} -m hkcgt@gmail.com --preferred-challenges http --standalone

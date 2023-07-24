@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -144,6 +145,24 @@ func CloseUserLimittimeSession() {
 	}
 }
 
+// 超过流量上限的用户进行下线处理
+func CloseUserLimitBandwidthSession() {
+	limitTimeToken := []string{}
+	sessMux.RLock()
+	for _, v := range sessions {
+		v.mux.RLock()
+		ok, err := dbdata.CheckBandwidth(v.Username)
+		if v.IsActive && err == nil && !ok {
+			limitTimeToken = append(limitTimeToken, v.Token)
+		}
+		v.mux.RUnlock()
+	}
+	sessMux.RUnlock()
+	for _, v := range limitTimeToken {
+		CloseSess(v, dbdata.UserLogoutExpire)
+	}
+}
+
 func GenToken() string {
 	// 生成32位的 token
 	bToken := make([]byte, 32)
@@ -159,6 +178,11 @@ func GetUserSession(name string) (list []*Session) {
 			list = append(list, v)
 		}
 	}
+
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].LastLogin.Before(list[j].LastLogin)
+	})
+
 	return
 }
 
@@ -334,6 +358,18 @@ func (cs *ConnSession) ratePeriod() {
 		// 累加所有流量
 		cs.BandwidthUpAll.Add(uint64(rtUp))
 		cs.BandwidthDownAll.Add(uint64(rtDown))
+
+		// 同步流量使用情况到中心节点
+		total := int64(cs.BandwidthDownAll.Load() + cs.BandwidthUpAll.Load())
+		go func() {
+			err := dbdata.BandwidthSync(&dbdata.BandwidthSyncRequest{
+				Username: cs.Username,
+				Used:     total,
+			})
+			if err != nil {
+				return
+			}
+		}()
 	}
 }
 

@@ -110,13 +110,25 @@ func LinkAuth(w http.ResponseWriter, r *http.Request) {
 	//	return
 	// }
 	// 检查已经登录的设备数
-	sessList := sessdata.GetUserSession(cr.Auth.Username)
-	//TODO: 动态客户端数量,目前仅允许一个，直接踢
-	fmt.Println("find user count", len(sessList))
-	if len(sessList) >= 1 {
-		oldSess := sessList[0]
-		fmt.Println("close old", oldSess.Token)
-		sessdata.CloseSess(oldSess.Token, dbdata.UserLogoutAdmin)
+	meta, err := dbdata.GetUserMeta(cr.Auth.Username)
+	if err != nil {
+		w.WriteHeader(http.StatusOK)
+		data := RequestData{Group: cr.GroupSelect, Groups: dbdata.GetGroupNamesNormal(), Error: "系统错误"}
+		if base.Cfg.DisplayError {
+			data.Error = err.Error()
+		}
+		tplRequest(tpl_request, w, data)
+		return
+	}
+	// 0 为不限制，大于0则根据设备限制
+	if meta.DeviceCount > 0 {
+		sessList := sessdata.GetUserSession(cr.Auth.Username)
+		fmt.Println("find user count", len(sessList))
+		if len(sessList) >= meta.DeviceCount {
+			oldSess := sessList[0] // 剔除最早的一个节点
+			base.Trace("close old", oldSess.Token)
+			sessdata.CloseSess(oldSess.Token, dbdata.UserLogoutAdmin)
+		}
 	}
 
 	// 创建新的session信息

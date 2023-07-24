@@ -40,6 +40,21 @@ type User struct {
 	UpdatedAt  time.Time  `json:"updated_at" xorm:"DateTime updated"`
 }
 
+type UserMeta struct {
+	Id                  int       `json:"id" xorm:"not null pk autoincr INT(11)"`
+	UserId              int       `json:"user_id" xorm:"unique INT(11)"`
+	Balance             string    `json:"balance" xorm:"DECIMAL(10,2)"`
+	Server              string    `json:"server" xorm:"comment('专属服务器') VARCHAR(255)"`
+	DeviceCount         int       `json:"device_count" xorm:"comment('最大设备数') INT(11)"`
+	InvitationCode      string    `json:"invitation_code" xorm:"comment('邀请码') unique VARCHAR(36)"`
+	ParentId            int       `json:"parent_id" xorm:"not null default 0 comment('推荐人') INT(11)"`
+	BandwidthUsed       int64     `json:"bandwidth_used" xorm:"not null default 0 comment('已使用流量bytes') BIGINT(20)"`
+	BandwidthTotal      int64     `json:"bandwidth_total" xorm:"not null default 0 comment('套餐带宽流量') BIGINT(20)"`
+	BandwidthAdditional int64     `json:"bandwidth_additional" xorm:"not null default 0 comment('额外的带宽') BIGINT(20)"`
+	CreatedAt           time.Time `json:"created_at" xorm:"DATETIME created"`
+	UpdatedAt           time.Time `json:"updated_at" xorm:"DATETIME updated"`
+}
+
 type UserActLog struct {
 	Id              int       `json:"id" xorm:"pk autoincr not null"`
 	Username        string    `json:"username" xorm:"varchar(60)"`

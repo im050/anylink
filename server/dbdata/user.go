@@ -139,6 +139,12 @@ func checkLocalUser(name, pwd, group string) error {
 		return errs.Errorf("%s %s", name, "密码错误")
 	}
 
+	// 判断流量上限
+	ok, err := CheckBandwidth(name)
+	if err == nil && ok == false {
+		return errs.Errorf("流量已达到使用上限")
+	}
+
 	return nil
 }
 
